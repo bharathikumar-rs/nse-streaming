@@ -41,7 +41,7 @@ class nse_stock_realtime_extract:
         """ concurrent processsing of Stock fetch from NSE websites"""
         self.log.debug("Concurrent processing of urls"
                        "in method get_current_day_quotes")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
             for x in executor.map(self.nse_live_fetch, stock_scan_list):
                 self.json_stock_realtime_quotes.append(x)
 
@@ -62,23 +62,22 @@ class nse_stock_realtime_extract:
         curr_date_time = curr_date_time.replace(":", "_")
         return curr_date_time
 
-    def main_run(self):
-        """ Main method to flow the program"""
-        start = time.time()
-        fetchquotes = nse_stock_realtime_extract()
-        fetchquotes.log.info("get_daily_realtime_quotes started")
-        # stock_list_arr =['infy', 'HEG', 'HDFC', 'ABAN']
-        stocklist = fetchquotes.read_stock_scan_list(
-               "d:\\scan_list_today\\stocklist.txt")
-        # print(stocklist)
-        fetchquotes.get_current_day_quotes(stocklist)
-        curr_dtime = fetchquotes.fetch_curr_date_time()
-        fetchquotes.write_file_current_day_quotes(
-                "d:\\Live_quotes\\curr_day_quotes_"+curr_dtime+".txt")
-        print("Current time %s" + curr_dtime)
-        fetchquotes.log.info("Total RunTimeElapsed Time:"
-                             "%ss" % (time.time() - start))
 
+    def main_method(self):
+    """ Main method to flow the program"""
+    start = time.time()
+    fetchquotes = nse_stock_realtime_extract()
+    fetchquotes.log.info("get_daily_realtime_quotes started")
 
-if __name__ == "__main__":
-    n = nse_stock_realtime_extract()
+    # stock_list_arr =['infy', 'HEG', 'HDFC', 'ABAN']
+    stocklist = fetchquotes.read_stock_scan_list(
+            "d:\\stock_codes_scan_curr_day\\stocklist_test50.txt")
+    # print(stocklist)
+    fetchquotes.get_current_day_quotes(stocklist)
+    curr_dtime = fetchquotes.fetch_curr_date_time()
+    fetchquotes.write_file_current_day_quotes(
+            "d:\\Live_quotes\\curr_day_quotes_"+curr_dtime+".txt")
+    print("Current time %s" + curr_dtime)
+    fetchquotes.log.info("Total RunTimeElapsed Time:"
+                         "%ss" % (time.time() - start))
+
