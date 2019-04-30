@@ -1,0 +1,6 @@
+README.md
+setup.py
+nse_streaming_py.egg-info/PKG-INFO
+nse_streaming_py.egg-info/SOURCES.txt
+nse_streaming_py.egg-info/dependency_links.txt
+nse_streaming_py.egg-info/top_level.txt

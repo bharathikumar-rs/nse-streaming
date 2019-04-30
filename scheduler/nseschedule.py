@@ -15,13 +15,13 @@ import schedule
 import time
 from scheduler.orchestrator import orchestrator
 
-class scheduler:
+class nsescheduler:
 
     def __init__(self):
         self.nse = Nse()
         fileConfig('../properties/logging_config.ini')
         self.log = logging.getLogger()
-        self.log.debug('Logger intiated ')
+        self.log.debug('scheduler intiated ')
 
     def schedule_run(self):
 
@@ -29,15 +29,21 @@ class scheduler:
         o = orchestrator()
         o.orchestrate_workflow()
 
+    def geeks2(self):
+        print("schedule is running about to trigger trading")
+
 def main():
-    sc = scheduler()
-    schedule.every(1).hour.do(sc.schedule_run())
+    sc = nsescheduler()
+    #schedule.every().hour.do(sc.schedule_run())
+    schedule.every(10).seconds.do(sc.schedule_run)
+    #schedule.every().hour.do(sc.schedule_run)
+    print ("Continuing with next run")
+
     while True:
     	# Checks whether a scheduled task
     	# is pending to run or not
     	schedule.run_pending()
     	time.sleep(1)
-
 
 if __name__ == "__main__":
     main()

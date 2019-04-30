@@ -29,7 +29,8 @@ class stock_exit_strategy_simple:
         curr_date_time = curr_date_time.replace(":", "_")
         return curr_date_time
 
-    def process_exit_criteria(self, curr_stock_price_fname ,pur_stock_price_fname):
+
+    def process_exit_criteria(self, curr_stock_price_fname ,pur_stock_price_fname,outputfile):
         """
             Selling logic Simple as of now
             profit  = (Buying_price -  LTP) - agent_trade_cost
@@ -61,7 +62,8 @@ class stock_exit_strategy_simple:
         agent_fee_sell  = 50.00
 
         purchase_price_df = pd.read_csv(pur_stock_price_fname)
-
+        out_df = pd.DataFrame(columns=['Symbol', 'lastPrice', 'Total_profit'
+                                            ,'profit_per','Decision'])
         # Exit /Selling criteria
 
         for df_row in range(len(df)) :
@@ -74,24 +76,37 @@ class stock_exit_strategy_simple:
                 total_profit - (agent_fee_prchase + agent_fee_sell) - purchase_price_df.iloc[df_row,5]
                 profit_per = total_profit /100
                 if(profit_per > 20):
+                    """
                     print(str(df.iloc[df_row, 33]), str(df.iloc[df_row, 15])\
                     + " Profit Sell |" + str(total_profit) +"|" +str(profit_per))
+                    """
+                    out_df.loc[-1] = [str(df.iloc[df_row, 33]), str(df.iloc[df_row, 15])
+                    ,str(total_profit),str(profit_per),"Profit Sell"]  # adding a row
+                    out_df.index = out_df.index + 1  # shifting index
+                    out_df = out_df.sort_index()  # sorting by index
 
-def main():
-    start = time.time()
-    exit_strategy = stock_exit_strategy_simple()
-    exit_strategy.log.info("Exit Strategy Module Started...")
-    ft = folder_traverse()
-    filename = ft.folder_nav_path('D:\\Live_quotes')
+        out_df.to_csv(outputfile, header=True)
 
-    exit_strategy.process_exit_criteria('D:\\Live_quotes\\curr_day_quotes.csv',\
-                                        'D:\\Live_quotes\\purchase_price_details.csv')
+    def main_run(self,currday_file,purchase_file,outputpath):
+        start = time.time()
 
-    exit_strategy.log.info("Total RunTimeElapsed Time:"
-                         "%ss" % (time.time() - start))
+        exit_strategy = stock_exit_strategy_simple()
+        curr_dtime = exit_strategy.fetch_curr_date_time()
+        exit_strategy.log.info("Exit Strategy Module Started...")
+        #ft = folder_traverse()
+        #filename = ft.folder_nav_path('D:\\Live_quotes')
+
+        #exit_strategy.process_exit_criteria('D:\\Live_quotes\\curr_day_quotes.csv',\
+        #                                    'D:\\Live_quotes\\purchase_price_details.csv')
+        outputfile = outputpath + "_Decision_"+curr_dtime+".csv"
+        exit_strategy.process_exit_criteria(currday_file,purchase_file,outputfile)
+
+        exit_strategy.log.info("exit_strategy - Total RunTimeElapsed Time:"
+                             "%ss" % (time.time() - start))
 
 
 if __name__ == "__main__":
-    main()
+    e = stock_exit_strategy_simple()
+    #main()
 
 """ End -of class """

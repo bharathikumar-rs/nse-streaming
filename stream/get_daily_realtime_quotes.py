@@ -35,15 +35,21 @@ class nse_stock_realtime_extract:
     def nse_live_fetch(self, stockquote):
         """ Fetch Realtime nse stock details  """
         self.log.debug("Processing of url :" + stockquote)
-        return self.nse.get_quote(str(stockquote))
+
+        test_list = self.nse.get_quote(str(stockquote))
+        self.json_stock_realtime_quotes.append(test_list)
+        return test_list
+        #return self.nse.get_quote(str(stockquote))
 
     def get_current_day_quotes(self, stock_scan_list):
         """ concurrent processsing of Stock fetch from NSE websites"""
         self.log.debug("Concurrent processing of urls"
                        "in method get_current_day_quotes")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        #with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ProcessPoolExecutor() as executor:
             for x in executor.map(self.nse_live_fetch, stock_scan_list):
                 self.json_stock_realtime_quotes.append(x)
+                self.log.debug("appends")
 
     def write_file_current_day_quotes(self, out_current_day_quotes_filename):
         """ convert the list to Datafframe
@@ -62,23 +68,25 @@ class nse_stock_realtime_extract:
         curr_date_time = curr_date_time.replace(":", "_")
         return curr_date_time
 
-    def main_run(self):
+    def main_run(self,scan_list,output_path):
         """ Main method to flow the program"""
         start = time.time()
         fetchquotes = nse_stock_realtime_extract()
         fetchquotes.log.info("get_daily_realtime_quotes started")
         # stock_list_arr =['infy', 'HEG', 'HDFC', 'ABAN']
-        stocklist = fetchquotes.read_stock_scan_list(
-               "d:\\scan_list_today\\stocklist.txt")
+        stocklist = fetchquotes.read_stock_scan_list(scan_list)
+        #       "d:\\scan_list_today\\stocklist_test50.txt")
         # print(stocklist)
         fetchquotes.get_current_day_quotes(stocklist)
         curr_dtime = fetchquotes.fetch_curr_date_time()
-        fetchquotes.write_file_current_day_quotes(
-                "d:\\Live_quotes\\curr_day_quotes_"+curr_dtime+".txt")
+        output_file = output_path+"curr_day_quotes_"+curr_dtime+".csv"
+        fetchquotes.log.info("live quotes output_file :" + output_file)
+        fetchquotes.write_file_current_day_quotes(output_file)
+        #        "d:\\Live_quotes_24042019\\curr_day_quotes_"+curr_dtime+".txt")
         print("Current time %s" + curr_dtime)
-        fetchquotes.log.info("Total RunTimeElapsed Time:"
+        fetchquotes.log.info("GetQuotes - Total RunTimeElapsed Time:"
                              "%ss" % (time.time() - start))
-
+        return output_file
 
 if __name__ == "__main__":
     n = nse_stock_realtime_extract()
