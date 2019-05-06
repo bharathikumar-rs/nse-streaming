@@ -13,7 +13,7 @@ import logging
 from logging.config import fileConfig
 import schedule
 import time
-from scheduler.orchestrator import orchestrator
+from scheduler.orchestratorv1 import orchestrator
 
 class nsescheduler:
 
@@ -34,10 +34,12 @@ class nsescheduler:
 
 def main():
     sc = nsescheduler()
+    sc.schedule_run()
     #schedule.every().hour.do(sc.schedule_run())
-    schedule.every(10).seconds.do(sc.schedule_run)
+    #schedule.every(10).seconds.do(sc.schedule_run)
     #schedule.every().hour.do(sc.schedule_run)
     print ("Continuing with next run")
+
 
     while True:
     	# Checks whether a scheduled task

@@ -27,7 +27,7 @@ class orchestrator:
         #sell = stock_exit_strategy_simple()
         decesion_file_path = "D:\\nse_data\\decision\\"
         purchase_file ="D:\\nse_data\\purchase_details\\purchase_price_details.csv"
-        stock_scan_file = "D:\\nse_data\\scan_list_today\\stocklist_test50.txt"
+        stock_scan_file = "D:\\nse_data\\scan_list_today\\stocklist.txt"
         live_quotes_path = "D:\\nse_data\\live_quotes_curr_day\\"
         live_quotes_archive_path = "D:\\nse_data\\live_quotes_today\\"
         currprice = nse_stock_realtime_extract()

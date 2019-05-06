@@ -46,10 +46,11 @@ class nse_stock_realtime_extract:
         self.log.debug("Concurrent processing of urls"
                        "in method get_current_day_quotes")
         #with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
             for x in executor.map(self.nse_live_fetch, stock_scan_list):
-                self.json_stock_realtime_quotes.append(x)
-                self.log.debug("appends")
+                #self.json_stock_realtime_quotes.append(x)
+                self.log.info("Length of list"+str(len(self.json_stock_realtime_quotes)))
+                #self.log.debug("X value"+str(x))
 
     def write_file_current_day_quotes(self, out_current_day_quotes_filename):
         """ convert the list to Datafframe
@@ -67,6 +68,7 @@ class nse_stock_realtime_extract:
         curr_date_time = curr_date_time.replace(" ", "_")
         curr_date_time = curr_date_time.replace(":", "_")
         return curr_date_time
+
 
     def main_run(self,scan_list,output_path):
         """ Main method to flow the program"""
