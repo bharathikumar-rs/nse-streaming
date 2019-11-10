@@ -25,6 +25,9 @@ class filemove:
     def move(self,filedet,destpath):
         shutil.move(filedet,destpath)
 
+    def folder_content_move(self,srcfolder,destfolder):
+        for i in os.listdir(srcfolder):
+            shutil.move(os.path.join(srcfolder, i), destfolder)
 
 if __name__ == "__main__":
     f = filemove()

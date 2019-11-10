@@ -13,6 +13,7 @@ import logging
 from logging.config import fileConfig
 import time
 from util.folder_traverse_util import folder_traverse
+from datetime import datetime
 
 class stock_exit_strategy_simple:
 
@@ -24,7 +25,8 @@ class stock_exit_strategy_simple:
 
     def fetch_curr_date_time(self):
         """ Fetch current Date & time"""
-        curr_date_time = time.asctime(time.localtime(time.time()))
+       # curr_date_time = time.asctime(time.localtime(time.time()))
+        curr_date_time = str(datetime.now())
         curr_date_time = curr_date_time.replace(" ", "_")
         curr_date_time = curr_date_time.replace(":", "_")
         return curr_date_time
@@ -86,10 +88,12 @@ class stock_exit_strategy_simple:
                     out_df = out_df.sort_index()  # sorting by index
 
         out_df.to_csv(outputfile, header=True)
+        print("Output file :"+outputfile)
+
 
     def main_run(self,currday_file,purchase_file,outputpath):
         start = time.time()
-
+        print("Executing decesion program")
         exit_strategy = stock_exit_strategy_simple()
         curr_dtime = exit_strategy.fetch_curr_date_time()
         exit_strategy.log.info("Exit Strategy Module Started...")
@@ -103,7 +107,7 @@ class stock_exit_strategy_simple:
 
         exit_strategy.log.info("exit_strategy - Total RunTimeElapsed Time:"
                              "%ss" % (time.time() - start))
-
+        return "Exit done"
 
 if __name__ == "__main__":
     e = stock_exit_strategy_simple()

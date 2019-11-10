@@ -10,7 +10,7 @@ from nsetools import Nse
 import pandas as pd
 import logging
 from logging.config import fileConfig
-
+import pika
 
 class nse_stock_realtime_extract:
     """
@@ -24,7 +24,8 @@ class nse_stock_realtime_extract:
         fileConfig('../properties/logging_config.ini')
         self.log = logging.getLogger()
         self.log.debug('Logger intiated ')
-        self.temoutfile = open("D:\\stocks_temp_file3.txt","a")
+        self.temoutfile = open("D:\\stocks_temp_file4.txt","a")
+
 
     def read_stock_scan_list(self, filename):
         """ Read the stocks to be scanned  """

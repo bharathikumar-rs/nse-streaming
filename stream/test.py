@@ -1,6 +1,13 @@
-import logging
-from logging.config import fileConfig
 
-fileConfig('logging_config.ini')
-logger = logging.getLogger()
-logger.debug('often makes a very good meal of %s', 'visiting tourists')
+
+
+sym ="test"
+price = 10
+volume = 22000
+
+x =' {"symbol":'+'"'+sym+'"'+',"price":'+str(price)+',"volume":'+str(volume)+'}'
+
+#x =  "{'symbol':'"+sym+"','price':"+str(price)+",'volume':"+str(volume)+"}"
+
+
+print (x)
