@@ -63,6 +63,7 @@ class nsescheduler:
         self.log.info ('file move completed...... ')
 
 def main():
+    # Kafka branch fix
     sc = nsescheduler()
     print ("Schedule Started ................")
     sc.get_live_data()
