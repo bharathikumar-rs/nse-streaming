@@ -37,6 +37,8 @@ class nsescheduler:
         o.multi_file_get_quotes(stocks_to_scan_folder)
         return
 
+# change needed in group id 2/12/2019 identified bug fix reequired
+        # remove this
     def exit_criteria_run(self):
         self.log.info("Schedule for Exit criteria started")
         print("schedule is running about to trigger exit strat")

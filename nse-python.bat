@@ -5,6 +5,8 @@
 echo starting zookeeper server
 START "ZOOKEEPER" "zkserver"
 
+START "ZOOKEEPER" "D:\servers\kafka_2.3.1\bin\windows\zookeeper-server-start.bat" d:\servers\kafka_2.3.1\config\zookeeper.properties
+
 timeout 20
 
 echo starting Kafka server
@@ -31,6 +33,8 @@ start cmd.exe /k  cd "exit_criteria" ^& python live_exit_strategy.py
 
 echo "All tasks started successfully!!!!!!!!!"
 
+
+START "KAFKATopic" "D:\servers\kafka_2.3.1\bin\windows\kafka-topics.bat" --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 10 --topic NSE_NEW
 
 exit
 

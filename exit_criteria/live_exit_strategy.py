@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 import json
 from kafka.errors import KafkaError
+
 import pandas as pd
 from exit_criteria.nse_json_parser import nse_json_parser
 from kafka import KafkaProducer
@@ -20,6 +21,7 @@ class live_exit_strategy:
         self.log = logging.getLogger()
         self.log.debug('Logger intiated ')
 
+# change needed in group id 2/12/2019 identified bug fix reequired
         self.consumer = KafkaConsumer('NSE_NEW'
                                       ,bootstrap_servers=['localhost:9092']
                                       ,auto_offset_reset='latest'
@@ -41,10 +43,19 @@ class live_exit_strategy:
 #         parse the json
 #         check agains the purchased stocks and  make a decision
 # =============================================================================
-        for message in self.consumer:
-            parse = nse_json_parser()
-            parse.json_to_df_yahoo(message.value, self.connection)
-            del parse
+        try:
+            for message in self.consumer:
+                parse = nse_json_parser()
+                parse.json_to_df_yahoo(message.value, self.connection)
+                del parse
+
+        except KeyboardInterrupt:
+            sys.stderr.write('%% Aborted by user\n')
+
+        finally:
+        # Close down consumer to commit final offsets.
+            self.consumer.close()
+
 
 def main():
     live  = live_exit_strategy()

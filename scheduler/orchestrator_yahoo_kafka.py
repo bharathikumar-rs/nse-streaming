@@ -56,6 +56,7 @@ class orchestrator:
 #             file will be extracted and stock list will be passed as List
 #
 # =============================================================================
+        # change needed in group id 2/12/2019 identified bug fix reequired
         get_stock_price = daily_stock_price_fetcher_kafka(
                 self.connection, "self.channel", "NSE_NEW")
         self.log.debug("started Processing File FileID : " + file_id)
